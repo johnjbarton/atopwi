@@ -1,0 +1,197 @@
+<!--
+Copyright (C) 2006, 2007, 2008 Apple Inc.  All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1.  Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+2.  Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of
+    its contributors may be used to endorse or promote products derived
+    from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="WebKit/audits.css">
+    <link rel="stylesheet" type="text/css" href="WebKit/dataGrid.css">
+    <link rel="stylesheet" type="text/css" href="WebKit/goToLineDialog.css">
+    <link rel="stylesheet" type="text/css" href="WebKit/heapProfiler.css">
+    <link rel="stylesheet" type="text/css" href="WebKit/inspector.css">
+    <link rel="stylesheet" type="text/css" href="WebKit/inspectorCommon.css">
+    <link rel="stylesheet" type="text/css" href="WebKit/inspectorSyntaxHighlight.css">
+    <link rel="stylesheet" type="text/css" href="WebKit/networkPanel.css">
+    <link rel="stylesheet" type="text/css" href="WebKit/helpScreen.css">
+    <link rel="stylesheet" type="text/css" href="WebKit/popover.css">
+    <link rel="stylesheet" type="text/css" href="WebKit/textViewer.css">
+    <script type="text/javascript" src="WebKit/utilities.js"></script>
+    <script type="text/javascript" src="WebKit/BinarySearch.js"></script>
+    <script type="text/javascript" src="WebKit/treeoutline.js"></script>
+    <script type="text/javascript" src="WebKit/inspector.js"></script>
+    <script type="text/javascript" src="generated/InspectorBackendStub.js"></script>
+    <script type="text/javascript" src="WebKit/InspectorFrontendHostStub.js"></script>
+    <script type="text/javascript" src="WebKit/ExtensionRegistryStub.js"></script>
+    <script type="text/javascript" src="WebKit/Object.js"></script>
+    <script type="text/javascript" src="WebKit/Settings.js"></script>
+    <script type="text/javascript" src="WebKit/Checkbox.js"></script>
+    <script type="text/javascript" src="WebKit/ContextMenu.js"></script>
+    <script type="text/javascript" src="WebKit/KeyboardShortcut.js"></script>
+    <script type="text/javascript" src="WebKit/TextPrompt.js"></script>
+    <script type="text/javascript" src="WebKit/Popover.js"></script>
+    <script type="text/javascript" src="WebKit/TabbedPane.js"></script>
+    <script type="text/javascript" src="WebKit/Placard.js"></script>
+    <script type="text/javascript" src="WebKit/View.js"></script>
+    <script type="text/javascript" src="WebKit/IFrameView.js"></script>
+    <script type="text/javascript" src="WebKit/Drawer.js"></script>
+    <script type="text/javascript" src="WebKit/ConsoleView.js"></script>
+    <script type="text/javascript" src="WebKit/Panel.js"></script>
+    <script type="text/javascript" src="WebKit/TimelineGrid.js"></script>    
+    <script type="text/javascript" src="WebKit/Resource.js"></script>
+    <script type="text/javascript" src="WebKit/CSSStyleModel.js"></script>
+    <script type="text/javascript" src="WebKit/NetworkManager.js"></script>
+    <script type="text/javascript" src="WebKit/ResourceTreeModel.js"></script>
+    <script type="text/javascript" src="WebKit/ResourceCategory.js"></script>
+    <script type="text/javascript" src="WebKit/TimelineManager.js"></script>
+    <script type="text/javascript" src="WebKit/Database.js"></script>
+    <script type="text/javascript" src="WebKit/DOMStorage.js"></script>
+    <script type="text/javascript" src="WebKit/DOMStorageItemsView.js"></script>
+    <script type="text/javascript" src="WebKit/DataGrid.js"></script>
+    <script type="text/javascript" src="WebKit/ShowMoreDataGridNode.js"></script>
+    <script type="text/javascript" src="WebKit/CookiesTable.js"></script>
+    <script type="text/javascript" src="WebKit/CookieItemsView.js"></script>
+    <script type="text/javascript" src="WebKit/ApplicationCacheItemsView.js"></script>
+    <script type="text/javascript" src="WebKit/Script.js"></script>
+    <script type="text/javascript" src="WebKit/SidebarPane.js"></script>
+    <script type="text/javascript" src="WebKit/ElementsTreeOutline.js"></script>
+    <script type="text/javascript" src="WebKit/SidebarTreeElement.js"></script>
+    <script type="text/javascript" src="WebKit/Section.js"></script>
+    <script type="text/javascript" src="WebKit/PropertiesSection.js"></script>
+    <script type="text/javascript" src="WebKit/RemoteObject.js"></script>
+    <script type="text/javascript" src="WebKit/ObjectPropertiesSection.js"></script>
+    <script type="text/javascript" src="WebKit/BreakpointsSidebarPane.js"></script>
+    <script type="text/javascript" src="WebKit/DOMBreakpointsSidebarPane.js"></script>
+    <script type="text/javascript" src="WebKit/CallStackSidebarPane.js"></script>
+    <script type="text/javascript" src="WebKit/ScopeChainSidebarPane.js"></script>
+    <script type="text/javascript" src="WebKit/WatchExpressionsSidebarPane.js"></script>
+    <script type="text/javascript" src="WebKit/WorkersSidebarPane.js"></script>
+    <script type="text/javascript" src="WebKit/MetricsSidebarPane.js"></script>
+    <script type="text/javascript" src="WebKit/PropertiesSidebarPane.js"></script>
+    <script type="text/javascript" src="WebKit/EventListenersSidebarPane.js"></script>
+    <script type="text/javascript" src="WebKit/Color.js"></script>
+    <script type="text/javascript" src="WebKit/CSSCompletions.js"></script>
+    <script type="text/javascript" src="WebKit/CSSKeywordCompletions.js"></script>
+    <script type="text/javascript" src="WebKit/StylesSidebarPane.js"></script>
+    <script type="text/javascript" src="WebKit/PanelEnablerView.js"></script>
+    <script type="text/javascript" src="WebKit/WelcomeView.js"></script>
+    <script type="text/javascript" src="WebKit/StatusBarButton.js"></script>
+    <script type="text/javascript" src="WebKit/ElementsPanel.js"></script>
+    <script type="text/javascript" src="WebKit/NetworkPanel.js"></script>
+    <script type="text/javascript" src="WebKit/InjectedFakeWorker.js"></script>
+    <script type="text/javascript" src="WebKit/TextViewer.js"></script>
+    <script type="text/javascript" src="WebKit/SourceFrame.js"></script>
+    <script type="text/javascript" src="WebKit/ResourceView.js"></script>
+    <script type="text/javascript" src="WebKit/ScriptsPanel.js"></script>
+    <script type="text/javascript" src="WebKit/ResourcesPanel.js"></script>
+    <script type="text/javascript" src="WebKit/ProfilesPanel.js"></script>
+    <script type="text/javascript" src="WebKit/ConsolePanel.js"></script>
+    <script type="text/javascript" src="WebKit/ExtensionAPI.js"></script>
+    <script type="text/javascript" src="WebKit/ExtensionAuditCategory.js"></script>
+    <script type="text/javascript" src="WebKit/ExtensionCommon.js"></script>
+    <script type="text/javascript" src="WebKit/ExtensionServer.js"></script>
+    <script type="text/javascript" src="WebKit/ExtensionPanel.js"></script>
+    <script type="text/javascript" src="WebKit/AuditsPanel.js"></script>
+    <script type="text/javascript" src="WebKit/AuditResultView.js"></script>
+    <script type="text/javascript" src="WebKit/AuditLauncherView.js"></script>
+    <script type="text/javascript" src="WebKit/AuditRules.js"></script>
+    <script type="text/javascript" src="WebKit/AuditCategories.js"></script>
+    <script type="text/javascript" src="WebKit/AuditFormatters.js"></script>
+    <script type="text/javascript" src="WebKit/NetworkItemView.js"></script>
+    <script type="text/javascript" src="WebKit/EmptyView.js"></script>
+    <script type="text/javascript" src="WebKit/ResourceHeadersView.js"></script>
+    <script type="text/javascript" src="WebKit/ResourceCookiesView.js"></script>
+    <script type="text/javascript" src="WebKit/ResourceTimingView.js"></script>
+    <script type="text/javascript" src="WebKit/ResourceJSONView.js"></script>
+    <script type="text/javascript" src="WebKit/ResourceHTMLView.js"></script>
+    <script type="text/javascript" src="WebKit/ResourceResponseView.js"></script>
+    <script type="text/javascript" src="WebKit/ResourcePreviewView.js"></script>
+    <script type="text/javascript" src="WebKit/ScriptFormatter.js"></script>
+    <script type="text/javascript" src="WebKit/DOMSyntaxHighlighter.js"></script>
+    <script type="text/javascript" src="WebKit/TextEditorModel.js"></script>
+    <script type="text/javascript" src="WebKit/TextEditorHighlighter.js"></script>
+    <script type="text/javascript" src="WebKit/SourceTokenizer.js"></script>
+    <script type="text/javascript" src="WebKit/SourceCSSTokenizer.js"></script>
+    <script type="text/javascript" src="WebKit/SourceHTMLTokenizer.js"></script>
+    <script type="text/javascript" src="WebKit/SourceJavaScriptTokenizer.js"></script>
+    <script type="text/javascript" src="WebKit/FontView.js"></script>
+    <script type="text/javascript" src="WebKit/ImageView.js"></script>
+    <script type="text/javascript" src="WebKit/DatabaseTableView.js"></script>
+    <script type="text/javascript" src="WebKit/DatabaseQueryView.js"></script>
+    <script type="text/javascript" src="WebKit/ProfileDataGridTree.js"></script>
+    <script type="text/javascript" src="WebKit/BottomUpProfileDataGridTree.js"></script>
+    <script type="text/javascript" src="WebKit/TopDownProfileDataGridTree.js"></script>
+    <script type="text/javascript" src="WebKit/ProfileView.js"></script>
+    <script type="text/javascript" src="WebKit/PartialQuickSort.js"></script>
+    <script type="text/javascript" src="WebKit/HeapSnapshot.js"></script>
+    <script type="text/javascript" src="WebKit/HeapSnapshotProxy.js"></script>
+    <script type="text/javascript" src="WebKit/HeapSnapshotWorkerDispatcher.js"></script>
+    <script type="text/javascript" src="WebKit/DetailedHeapshotGridNodes.js"></script>
+    <script type="text/javascript" src="WebKit/DetailedHeapshotView.js"></script>
+    <script type="text/javascript" src="WebKit/DebuggerModel.js"></script>
+    <script type="text/javascript" src="WebKit/DebuggerPresentationModel.js"></script>
+    <script type="text/javascript" src="WebKit/SourceFile.js"></script>
+    <script type="text/javascript" src="WebKit/DOMAgent.js"></script>
+    <script type="text/javascript" src="WebKit/TimelineAgent.js"></script>
+    <script type="text/javascript" src="WebKit/TimelinePanel.js"></script>
+    <script type="text/javascript" src="WebKit/TimelineOverviewPane.js"></script>
+    <script type="text/javascript" src="WebKit/TestController.js"></script>
+    <script type="text/javascript" src="WebKit/HelpScreen.js"></script>
+    <script type="text/javascript" src="WebKit/GoToLineDialog.js"></script>
+    <script type="text/javascript" src="WebKit/SettingsScreen.js"></script>
+    <script type="text/javascript" src="WebKit/ShortcutsScreen.js"></script>
+    <script type="text/javascript" src="WebKit/HAREntry.js"></script>
+    <script type="text/javascript" src="WebKit/CookieParser.js"></script>
+    <script type="text/javascript" src="WebKit/Toolbar.js"></script>
+    <script type="text/javascript" src="WebKit/SearchController.js"></script>
+    <script type="text/javascript" src="WebKit/WorkerManager.js"></script>
+    <script type="text/javascript" src="WebKit/UserMetrics.js"></script>
+    <script type="text/javascript" src="WebKit/JavaScriptContextManager.js"></script>
+    <link rel="stylesheet" type="text/css" href="chromium/devTools.css">
+    <script type="text/javascript" src="chromium/DevTools.js"></script>
+    <script type="text/javascript" src="chromium/Tests.js"></script>
+</head>
+<body class="detached">
+    <div id="toolbar">
+        <div class="toolbar-item close-left"><button id="close-button-left"></button></div>
+        <div id="toolbar-controls">
+            <div class="toolbar-item"><button id="toolbar-dropdown-arrow" class="toolbar-label">&raquo;</button></div>
+            <div class="toolbar-item hidden" id="search-results-matches"></div>
+            <div class="toolbar-item toolbar-search-item"><input id="search" type="search" incremental results="0"><div id="search-toolbar-label" class="toolbar-label"></div></div>
+            <div class="toolbar-item close-right"><button id="close-button-right"></button></div>
+        </div>
+    </div>
+    <div id="main">
+        <div id="main-panels" spellcheck="false"></div>
+        <div id="main-status-bar" class="status-bar"><div id="anchored-status-bar-items"><div id="counters"><div id="error-warning-count" class="hidden"></div></div></div></div>
+    </div>
+    <div id="drawer">
+        <div id="console-view"><div id="console-messages" class="monospace"><div id="console-prompt" spellcheck="false"><br></div></div></div>
+        <div id="drawer-status-bar" class="status-bar"><div id="other-drawer-status-bar-items"><button id="clear-console-status-bar-item" class="status-bar-item clear-status-bar-item"><div class="glyph"></div><div class="glyph shadow"></div></button><select id="console-context" class="status-bar-item"></select><div id="console-filter" class="scope-bar status-bar-item"></div></div></div>
+    </div>
+</body>
+</html>
