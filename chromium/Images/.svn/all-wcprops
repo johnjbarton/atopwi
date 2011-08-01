@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repository/webkit/!svn/ver/81194/trunk/Source/WebKit/chromium/src/js/Images
+END
+statusbarBackgroundChromium.png
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/repository/webkit/!svn/ver/81194/trunk/Source/WebKit/chromium/src/js/Images/statusbarBackgroundChromium.png
+END
+statusbarMenuButtonChromium.png
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/repository/webkit/!svn/ver/81194/trunk/Source/WebKit/chromium/src/js/Images/statusbarMenuButtonChromium.png
+END
+segmentSelectedChromium.png
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/repository/webkit/!svn/ver/81194/trunk/Source/WebKit/chromium/src/js/Images/segmentSelectedChromium.png
+END
+segmentHoverEndChromium.png
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/repository/webkit/!svn/ver/81194/trunk/Source/WebKit/chromium/src/js/Images/segmentHoverEndChromium.png
+END
+statusbarBottomBackgroundChromium.png
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/repository/webkit/!svn/ver/81194/trunk/Source/WebKit/chromium/src/js/Images/statusbarBottomBackgroundChromium.png
+END
+segmentChromium.png
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/repository/webkit/!svn/ver/81194/trunk/Source/WebKit/chromium/src/js/Images/segmentChromium.png
+END
+segmentSelectedEndChromium.png
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/repository/webkit/!svn/ver/81194/trunk/Source/WebKit/chromium/src/js/Images/segmentSelectedEndChromium.png
+END
+statusbarMenuButtonSelectedChromium.png
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/repository/webkit/!svn/ver/81194/trunk/Source/WebKit/chromium/src/js/Images/statusbarMenuButtonSelectedChromium.png
+END
+segmentHoverChromium.png
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/repository/webkit/!svn/ver/81194/trunk/Source/WebKit/chromium/src/js/Images/segmentHoverChromium.png
+END
+statusbarButtonsChromium.png
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/repository/webkit/!svn/ver/75909/trunk/Source/WebKit/chromium/src/js/Images/statusbarButtonsChromium.png
+END
