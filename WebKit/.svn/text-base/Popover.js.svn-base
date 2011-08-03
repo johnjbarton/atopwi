@@ -171,7 +171,7 @@ WebInspector.PopoverHelper = function(panelElement, getAnchor, showPopup, showOn
 WebInspector.PopoverHelper.prototype = {
     setTimeout: function(timeout)
     {
-         this._timeout = timeout;
+        this._timeout = timeout;
     },
 
     _mouseDown: function(event)

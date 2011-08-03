@@ -143,7 +143,11 @@ WebInspector.NetworkLogView.prototype = {
 
     _createTable: function()
     {
-        var columns = {name: {}, method: {}, status: {}, type: {}, initiator: {}, size: {}, time: {}, timeline: {}};
+        var columns;
+        if (Preferences.showNetworkPanelInitiatorColumn)
+            columns = {name: {}, method: {}, status: {}, type: {}, initiator: {}, size: {}, time: {}, timeline: {}};
+        else
+            columns = {name: {}, method: {}, status: {}, type: {}, size: {}, time: {}, timeline: {}};
         columns.name.titleDOMFragment = this._makeHeaderFragment(WebInspector.UIString("Name"), WebInspector.UIString("Path"));
         columns.name.sortable = true;
         columns.name.width = "20%";
@@ -161,9 +165,11 @@ WebInspector.NetworkLogView.prototype = {
         columns.type.sortable = true;
         columns.type.width = "6%";
 
-        columns.initiator.title = WebInspector.UIString("Initiator");
-        columns.initiator.sortable = true;
-        columns.initiator.width = "10%";
+        if (Preferences.showNetworkPanelInitiatorColumn) {
+            columns.initiator.title = WebInspector.UIString("Initiator");
+            columns.initiator.sortable = true;
+            columns.initiator.width = "10%";
+        }
 
         columns.size.titleDOMFragment = this._makeHeaderFragment(WebInspector.UIString("Size"), WebInspector.UIString("Content"));
         columns.size.sortable = true;
@@ -177,7 +183,10 @@ WebInspector.NetworkLogView.prototype = {
 
         columns.timeline.title = "";
         columns.timeline.sortable = false;
-        columns.timeline.width = "40%";
+        if (Preferences.showNetworkPanelInitiatorColumn)
+            columns.timeline.width = "40%";
+        else
+            columns.timeline.width = "50%";
         columns.timeline.sort = "ascending";
 
         this._dataGrid = new WebInspector.DataGrid(columns);
@@ -805,7 +814,8 @@ WebInspector.NetworkLogView.prototype = {
         this._dataGrid.showColumn("method");
         this._dataGrid.showColumn("status");
         this._dataGrid.showColumn("type");
-        this._dataGrid.showColumn("initiator");
+        if (Preferences.showNetworkPanelInitiatorColumn)
+            this._dataGrid.showColumn("initiator");
         this._dataGrid.showColumn("size");
         this._dataGrid.showColumn("time");
         this._dataGrid.showColumn("timeline");
@@ -815,10 +825,14 @@ WebInspector.NetworkLogView.prototype = {
         widths.method = 6;
         widths.status = 6;
         widths.type = 6;
-        widths.initiator = 10;
+        if (Preferences.showNetworkPanelInitiatorColumn)
+            widths.initiator = 10;
         widths.size = 6;
         widths.time = 6;
-        widths.timeline = 40;
+        if (Preferences.showNetworkPanelInitiatorColumn)
+            widths.timeline = 40;
+        else
+            widths.timeline = 50;
 
         this._dataGrid.applyColumnWidthsMap(widths);
     },
@@ -830,7 +844,8 @@ WebInspector.NetworkLogView.prototype = {
         this._dataGrid.hideColumn("method");
         this._dataGrid.hideColumn("status");
         this._dataGrid.hideColumn("type");
-        this._dataGrid.hideColumn("initiator");
+        if (Preferences.showNetworkPanelInitiatorColumn)
+            this._dataGrid.hideColumn("initiator");
         this._dataGrid.hideColumn("size");
         this._dataGrid.hideColumn("time");
         this._dataGrid.hideColumn("timeline");
@@ -899,7 +914,8 @@ WebInspector.NetworkLogView.prototype = {
         this._dataGrid.showColumn("method");
         this._dataGrid.showColumn("status");
         this._dataGrid.showColumn("type");
-        this._dataGrid.showColumn("initiator");
+        if (Preferences.showNetworkPanelInitiatorColumn)
+            this._dataGrid.showColumn("initiator");
         this._dataGrid.showColumn("size");
         this._dataGrid.showColumn("time");
 
@@ -908,10 +924,14 @@ WebInspector.NetworkLogView.prototype = {
         widths.method = 6;
         widths.status = 6;
         widths.type = 6;
-        widths.initiator = 10;
+        if (Preferences.showNetworkPanelInitiatorColumn)
+            widths.initiator = 10;
         widths.size = 6;
         widths.time = 6;
-        widths.timeline = 40;
+        if (Preferences.showNetworkPanelInitiatorColumn)
+            widths.timeline = 40;
+        else
+            widths.timeline = 50;
 
         this._dataGrid.showColumn("timeline");
         this._dataGrid.applyColumnWidthsMap(widths);
@@ -928,7 +948,8 @@ WebInspector.NetworkLogView.prototype = {
         this._dataGrid.hideColumn("method");
         this._dataGrid.hideColumn("status");
         this._dataGrid.hideColumn("type");
-        this._dataGrid.hideColumn("initiator");
+        if (Preferences.showNetworkPanelInitiatorColumn)
+            this._dataGrid.hideColumn("initiator");
         this._dataGrid.hideColumn("size");
         this._dataGrid.hideColumn("time");
         this._dataGrid.hideColumn("timeline");
@@ -1735,7 +1756,8 @@ WebInspector.NetworkDataGridNode.prototype = {
         this._methodCell = this._createDivInTD("method");
         this._statusCell = this._createDivInTD("status");
         this._typeCell = this._createDivInTD("type");
-        this._initiatorCell = this._createDivInTD("initiator");
+        if (Preferences.showNetworkPanelInitiatorColumn)
+            this._initiatorCell = this._createDivInTD("initiator");
         this._sizeCell = this._createDivInTD("size");
         this._timeCell = this._createDivInTD("time");
         this._createTimelineCell();
@@ -1828,7 +1850,8 @@ WebInspector.NetworkDataGridNode.prototype = {
 
         this._refreshStatusCell();
         this._refreshTypeCell();
-        this._refreshInitiatorCell();
+        if (Preferences.showNetworkPanelInitiatorColumn)
+            this._refreshInitiatorCell();
         this._refreshSizeCell();
         this._refreshTimeCell();
 
@@ -1889,6 +1912,7 @@ WebInspector.NetworkDataGridNode.prototype = {
             else
                 this._statusCell.setTextAndTitle(WebInspector.UIString("(failed)"));
             this._statusCell.addStyleClass("network-dim-cell");
+            this.element.addStyleClass("network-error-row");
             return;
         }
 
@@ -1896,15 +1920,20 @@ WebInspector.NetworkDataGridNode.prototype = {
         if (fromCache) {
             this._statusCell.setTextAndTitle(WebInspector.UIString("(from cache)"));
             this._statusCell.addStyleClass("network-dim-cell");
+            this.element.removeStyleClass("network-error-row");
             return;
         }
 
         this._statusCell.removeStyleClass("network-dim-cell");
+        this.element.removeStyleClass("network-error-row");
+
         if (this._resource.statusCode) {
             this._statusCell.appendChild(document.createTextNode(this._resource.statusCode));
             this._statusCell.removeStyleClass("network-dim-cell");
             this._appendSubtitle(this._statusCell, this._resource.statusText);
             this._statusCell.title = this._resource.statusCode + " " + this._resource.statusText;
+            if (this._resource.statusCode >= 400)
+                this.element.addStyleClass("network-error-row");
         } else {
             if (this._resource.isDataURL() && this._resource.finished)
                 this._statusCell.setTextAndTitle(WebInspector.UIString("(data url)"));
@@ -1941,6 +1970,12 @@ WebInspector.NetworkDataGridNode.prototype = {
             this._initiatorCell.removeChildren();
             if (initiator.type === "script") {
                 var topFrame = initiator.stackTrace[0];
+                // This could happen when resource loading was triggered by console. 
+                if (!topFrame.url) {
+                    this._initiatorCell.addStyleClass("network-dim-cell");
+                    this._initiatorCell.setTextAndTitle(WebInspector.UIString("Other"));
+                    return;
+                }
                 this._initiatorCell.title = topFrame.url + ":" + topFrame.lineNumber;
                 this._initiatorCell.appendChild(WebInspector.linkifyResourceAsNode(topFrame.url, "scripts", topFrame.lineNumber));
                 this._appendSubtitle(this._initiatorCell, WebInspector.UIString("Script"));
