@@ -1604,11 +1604,13 @@ WebInspector.StylePropertyTreeElement.prototype = {
             // Avoid having longhands under an invalid shorthand.
             this.hasChildren = false;
             this.listItemElement.addStyleClass("not-parsed-ok");
+            this.tooltip = WebInspector.UIString("Invalid CSS property text");
+        } else {
+          this.tooltip = this.property.propertyText;
         }
+        
         if (this.property.inactive)
             this.listItemElement.addStyleClass("inactive");
-
-        this.tooltip = this.property.propertyText;
     },
 
     _updateAll: function()
