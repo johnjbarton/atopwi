@@ -71,6 +71,7 @@ WebInspector.StylesSidebarPane = function(computedStylePane)
 
     var addButton = document.createElement("button");
     addButton.className = "pane-title-button add";
+    addButton.id = "add-style-button-test-id";
     addButton.title = WebInspector.UIString("New Style Rule");
     addButton.addEventListener("click", this._createNewRule.bind(this), false);
     this.titleElement.appendChild(addButton);
@@ -365,17 +366,7 @@ WebInspector.StylesSidebarPane.prototype = {
 
         styleRules.push({ computedStyle: true, selectorText: "", style: nodeComputedStyle, editable: false });
 
-        var styleAttributes = {};
-        for (var name in styles.styleAttributes) {
-            var attrStyle = { style: styles.styleAttributes[name], editable: false };
-            attrStyle.selectorText = WebInspector.panels.elements.treeOutline.nodeNameToCorrectCase(node.nodeName()) + "[" + name;
-            if (node.getAttribute(name))
-                attrStyle.selectorText += "=" + node.getAttribute(name);
-            attrStyle.selectorText += "]";
-            styleRules.push(attrStyle);
-        }
-
-        // Show element's Style Attributes
+        // Inline style has the greatest specificity.
         if (styles.inlineStyle && node.nodeType() === Node.ELEMENT_NODE) {
             var inlineStyle = { selectorText: "element.style", style: styles.inlineStyle, isAttribute: true };
             styleRules.push(inlineStyle);
@@ -387,6 +378,17 @@ WebInspector.StylesSidebarPane.prototype = {
         for (var i = styles.matchedCSSRules.length - 1; i >= 0; --i) {
             var rule = styles.matchedCSSRules[i];
             styleRules.push({ style: rule.style, selectorText: rule.selectorText, sourceURL: rule.sourceURL, rule: rule, editable: !!(rule.style && rule.style.id) });
+        }
+
+        // Show element's Style Attributes after all rules.
+        var styleAttributes = {};
+        for (var name in styles.styleAttributes) {
+            var attrStyle = { style: styles.styleAttributes[name], editable: false };
+            attrStyle.selectorText = WebInspector.panels.elements.treeOutline.nodeNameToCorrectCase(node.nodeName()) + "[" + name;
+            if (node.getAttribute(name))
+                attrStyle.selectorText += "=" + node.getAttribute(name);
+            attrStyle.selectorText += "]";
+            styleRules.push(attrStyle);
         }
 
         // Walk the node structure and identify styles with inherited properties.
@@ -1285,24 +1287,23 @@ WebInspector.BlankStylePropertiesSection.prototype = {
 
     editingSelectorCommitted: function(element, newContent, oldContent, context)
     {
-        var self = this;
         function successCallback(newRule, doesSelectorAffectSelectedNode)
         {
-            var styleRule = { section: self, style: newRule.style, selectorText: newRule.selectorText, sourceURL: newRule.sourceURL, rule: newRule };
-            self.makeNormal(styleRule);
+            var styleRule = { section: this, style: newRule.style, selectorText: newRule.selectorText, sourceURL: newRule.sourceURL, rule: newRule };
+            this.makeNormal(styleRule);
 
             if (!doesSelectorAffectSelectedNode) {
-                self.noAffect = true;
-                self.element.addStyleClass("no-affect");
+                this.noAffect = true;
+                this.element.addStyleClass("no-affect");
             }
 
-            self.subtitleElement.textContent = WebInspector.UIString("via inspector");
-            self.expand();
-
-            self.addNewBlankProperty().startEditing();
+            this.subtitleElement.textContent = WebInspector.UIString("via inspector");
+            this.expand();
+            if (this.element.parentElement)  // Might have been detached already.
+                this.addNewBlankProperty().startEditing();
         }
 
-        WebInspector.cssModel.addRule(this.pane.node.id, newContent, successCallback, this.editingSelectorCancelled.bind(this));
+        WebInspector.cssModel.addRule(this.pane.node.id, newContent, successCallback.bind(this), this.editingSelectorCancelled.bind(this));
     },
 
     editingSelectorCancelled: function()

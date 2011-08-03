@@ -1073,7 +1073,7 @@ WebInspector.FrameTreeElement.prototype = {
         this._storagePanel.showCategoryView(this._displayName);
 
         this.listItemElement.removeStyleClass("hovered");
-        DOMAgent.hideFrameHighlight();
+        DOMAgent.hideHighlight();
     },
 
     get displayName()
@@ -1108,7 +1108,7 @@ WebInspector.FrameTreeElement.prototype = {
             DOMAgent.highlightFrame(this._frameId);
         } else {
             this.listItemElement.removeStyleClass("hovered");
-            DOMAgent.hideFrameHighlight();
+            DOMAgent.hideHighlight();
         }
     },
 
@@ -1399,15 +1399,13 @@ WebInspector.FrameResourceTreeElement.prototype = {
         var newView = this._createSourceView();
 
         var oldViewParentNode = oldView.visible ? oldView.element.parentNode : null;
-        var scrollTop = oldView.scrollTop;
+        newView.inheritScrollPositionsFromView(oldView);
 
         this._sourceView.detach();
         this._sourceView = newView;
 
         if (oldViewParentNode)
             newView.show(oldViewParentNode);
-        if (scrollTop)
-            newView.scrollTop = scrollTop;
 
         return newView;
     }    
