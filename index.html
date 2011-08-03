@@ -1,0 +1,168 @@
+<html>
+<head>
+<title>atopwi: Experiments on top of Web Inspector</title>
+<style>
+body {
+  font-family: sans-serif;
+}
+</style>
+<script>
+
+var remotePageManager = {
+        
+  fireRemotePageRequest: function() {
+    var req = new XMLHttpRequest();
+    req.open("GET", "localhost:9222/json", true);
+    req.onreadystatechange = remotePageManager.handleRemotePageResponse;
+    req.send(); // async
+  },
+
+  handleRemotePageResponse: function(event) {
+    // |this| is request object
+    if (this.readyState === 4) {
+      if(this.status === 200) {
+        if (this.response != null) {
+          remotePageManager.storeResponse(this.response);
+        } else {
+          remotePageMangaer.reportError("Server returned 200 ok, but it gave no response object");          
+        }
+      } else {
+        remotePageManager.reportError("Server error "+this.status, this, event);
+      }
+    } // else wait for another call
+  },
+
+  storeResponse: function(response) {
+    this.remotePages = JSON.parse(response);
+    this.updateRemotePageList();
+  },  
+    
+  updateRemotePageList: function() {
+    var div = remotePageManager.getOutputDiv();
+    if (div && this.remotePages) {
+      var ol = div.ownerDocument.createElement('ol');
+      
+      this.remotePages.foreach(function displayRemotePage(page) {
+        var li = ol.ownerDocument.createElement('li');
+        ol.appendChild(li);
+        var a = ol.ownerDocument.createElement('a');
+        a.innerText = page.title;
+        if (page.devtoolsFrontendUrl) {
+          a.href = remotePageManager.mangle(page.devtoolsFrontendUrl);
+        } else {
+          a.title = "Another debugger is looking at this page";
+        }
+        li.appendChild(a);
+      });
+      div.appendChild(ol);
+    }
+  },
+  
+  mangle: function(url) {
+    var rest = url.split('?')[1];
+    return "atopwi.html?"+rest;
+  },
+  
+  handleLoad: function(event) {
+      remotePageManager.updateRemotePageList();
+  },
+  
+  getOutputDiv: function() {
+    return document.getElementById('remotepages');
+  },
+  
+  reportError: function(/* string, objects */) {
+    console.log(arguments);
+    var div = remotePageManager.getOutputDiv();
+    if (div)
+      div.innerHTML = arguments[0];
+  },
+        
+}
+
+//window.addEventListener('load', remotePageManager.handleLoad, true);
+
+//remotePageManager.fireRemotePageRequest();
+
+var remoteBrowserPoker = {
+
+  getBaseURL: function() {
+    if (!this.baseURL) {
+      this.baseURL = window.location.toString().split('/').slice(0,-1).join('/')+"/atopwi.html";
+    }
+    return this.baseURL;
+  },
+  
+  convertWSURLtoOpeningURL: function(url) {
+    var segments = url.split('/');  // ws://localhost:9222/devtools/page/2
+    return this.getBaseURL()+"?host="+segments[2]+"&page="+segments[5];
+  },
+      
+  appendItem: function(url) {
+    var ol = document.getElementById('remotepages');
+    var li = ol.ownerDocument.createElement('li');
+    ol.appendChild(li);
+    var a = ol.ownerDocument.createElement('a');
+    li.appendChild(a);
+    a.innerText = url;
+    a.href = remoteBrowserPoker.convertWSURLtoOpeningURL(url);
+  },      
+        
+  pokeOne: function(url) {
+    var socket = new WebSocket(url);
+    socket.onmessage = function(message) { 
+      console.log("message pokeOnePage("+url+"): ", arguments); 
+    }
+    socket.onerror = function(error) { 
+      console.error("error pokeOnePage("+url+"): "+error, error); 
+    }
+    socket.onopen = function() {
+      remoteBrowserPoker.appendItem(url);
+      console.log("open pokeOnePage("+url+"): ", arguments);
+      console.log("open succeeds for "+url, socket);
+    }
+    console.log("poking "+url);
+  },
+  
+  pokeOnePage: function(host, pageNumber) {
+    var url = "ws://" + host + "/devtools/page/" + pageNumber;
+    try {
+      this.pokeOne(url);  
+    } catch(exc) {
+      console.error("pokeOne ERROR "+exc);
+    }
+    
+  },
+  
+  pokeForPages: function(hostColonPort, begin, end) {
+    hostColonPort = hostColonPort ||"localhost:9222";
+    begin = begin || 0;
+    end = end || 9;
+    for (var i = begin; i < end; i++) {
+      remoteBrowserPoker.pokeOnePage(hostColonPort, i);
+    }
+  }
+ 
+};
+
+
+</script>
+</head>
+<body>
+<h1>Remote debug connector</h1>
+<form action="#">
+<script>
+function firePoker(submitButton) {
+  var pokedHostColonPort = submitButton.ownerDocument.getElementById("pokedHostColonPort");
+  pokedHostColonPort.innerHTML = "Pages available on "+submitButton.nextElementSibling.value;
+  remoteBrowserPoker.pokeForPages(submitButton.nextElementSibling.value);
+  return true;
+}
+</script>
+<button type="submit" onclick="firePoker(this)">Get Available Pages</button>
+<input type="text" value="localhost:9222">
+</form>
+<h2 id="pokedHostColonPort"></h2>
+<ol id="remotepages"></ol>
+</body>
+</html>
