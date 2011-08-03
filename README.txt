@@ -13,11 +13,15 @@ Actual commands in /atopwi
 svn checkout http://svn.webkit.org/repository/webkit/trunk/Source/WebCore/inspector/front-end/ WebKit
 svn checkout http://svn.webkit.org/repository/webkit/trunk/Source/WebKit/chromium/src/js/ chromium
 
-http://svn.webkit.org/repository/webkit/trunk/Source/WebKit/chromium/src/js/ chromium
-http://svn.webkit.org/repository/webkit/trunk/Source/WebCore/inspector/front-end/ WebKit
+
 
 -----------------------------
 Notes
 
 InspectorBackendStub.js is pulled from $(obj)/gen/webcore during devtools.js concatentation in concatenated_devtools_js.target.mk
 InspectorBackendStub.js is a dependent of a rule in inspector_protocol_sources.target.mk. 
+
+Workflow Issue:
+ * reload (ctrl+r) fails when paused on breakpoint
+ * changed objects or dom should highlight on single step
+ * mouse over should give values of objects 
